@@ -7,8 +7,8 @@ from scipy.interpolate import CubicHermiteSpline, splev
 from modules.hex import Hex
 from modules.connected_hex import ConnectedHexCollection
 
-from modules.faces import writeFaces, writeBoundary, writeOwners, writeNeighbours
-from modules.points import writePoints
+from modules.faces import groupFaces
+from modules.polymesh import writePolyMesh
 
 from interpolate import *
 
@@ -238,20 +238,16 @@ num_points = o_grid_mesh.assignEdgePointsIndices(num_points)
 num_points = o_grid_mesh.assignFacePointsIndices(num_points)
 num_points = o_grid_mesh.assignInternalIndices(num_points)
 
-faces = o_grid_mesh.getFaces()
+faces	= o_grid_mesh.getFaces()
+points	= o_grid_mesh.getPoints()
+
+faces = groupFaces(faces, [f'h{i}_f4' for i in range(5)], 'INLET')
+faces = groupFaces(faces, [f'h{i}_f5' for i in range(5)], 'OUTLET')
+
+walls = [key for key in faces.keys() if key[0] == 'h' and key[-2] == 'f']
+faces = groupFaces(faces, walls, 'WALL')
 
 ###############################################################################
 # Write to file
 
-dir_path = Path('.')
-(dir_path / 'constant' / 'polyMesh').mkdir(parents=True, exist_ok=True)
-
-boundary_dict = writeFaces(dir_path, faces)
-
-writeBoundary(dir_path, boundary_dict)
-
-writeOwners(dir_path, faces, boundary_dict)
-
-writeNeighbours(dir_path, faces)
-
-writePoints(dir_path, o_grid_mesh.getPoints())
+writePolyMesh(Path('test'), faces, points)
