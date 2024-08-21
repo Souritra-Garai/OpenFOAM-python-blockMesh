@@ -2,7 +2,7 @@ from pathlib import Path
 
 import numpy as np
 
-from modules.openfoam import addHeader, getPolyMeshFilePath, appendDictionary, file_EOF
+from modules.openfoam_dictionary import addHeader, getPolyMeshFilePath, appendDictionary, file_EOF
 
 def writeFaces(case_path: Path, face_dict: dict) -> dict:
 
