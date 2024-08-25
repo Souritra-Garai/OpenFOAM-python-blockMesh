@@ -2,11 +2,11 @@ from pathlib import Path
 
 import numpy as np
 
-from modules.openfoam_dictionary import addHeader, getPolyMeshFilePath, file_EOF
+from .openfoam_dictionary import addHeader, file_EOF
 
-def writePoints(case_path: Path, points:np.ndarray) -> dict:
+def writePoints(polyMesh_dir_path: Path, points:np.ndarray) -> dict:
 
-	file_path = getPolyMeshFilePath(case_path, 'points')
+	file_path = polyMesh_dir_path / 'points'
 
 	addHeader(file_path, {
 		'format'	: 'ascii',

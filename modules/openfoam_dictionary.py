@@ -56,7 +56,3 @@ def addHeader(file_path: Path, file_dict:dict) -> None:
 		file.write(file_separator)
 
 		file.write('\n')
-	
-def getPolyMeshFilePath(case_path: Path, file_name: str) -> Path:
-	
-	return case_path / 'constant' / 'polyMesh' / file_name

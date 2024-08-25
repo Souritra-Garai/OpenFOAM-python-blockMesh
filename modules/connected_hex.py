@@ -1,6 +1,6 @@
 import numpy as np
 
-from modules.hex import Hex
+from .hex import Hex
 
 hex_face_vertices = (
 	(3, 0, 4, 7),

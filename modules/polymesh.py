@@ -3,8 +3,8 @@ from pathlib import Path
 
 import numpy as np
 
-from modules.faces import writeFaces, writeBoundary, writeOwners, writeNeighbours
-from modules.points import writePoints
+from .faces import writeFaces, writeBoundary, writeOwners, writeNeighbours
+from .points import writePoints
 
 def writePolyMesh(case_dir_path: Path, faces:dict, points:np.ndarray) -> None:
 
@@ -16,20 +16,20 @@ def writePolyMesh(case_dir_path: Path, faces:dict, points:np.ndarray) -> None:
 
 	logging.info('Writing faces file')
 
-	boundary_dict = writeFaces(case_dir_path, faces)
+	boundary_dict = writeFaces(polyMesh_dir_path, faces)
 
 	logging.info('Writing boundary file')
 
-	writeBoundary(case_dir_path, boundary_dict)
+	writeBoundary(polyMesh_dir_path, boundary_dict)
 
 	logging.info('Writing owners file')
 
-	writeOwners(case_dir_path, faces, boundary_dict)
+	writeOwners(polyMesh_dir_path, faces, boundary_dict)
 
 	logging.info('Writing neighbours file')
 
-	writeNeighbours(case_dir_path, faces)
+	writeNeighbours(polyMesh_dir_path, faces)
 
 	logging.info('Writing points file')
 
-	writePoints(case_dir_path, points)
+	writePoints(polyMesh_dir_path, points)
