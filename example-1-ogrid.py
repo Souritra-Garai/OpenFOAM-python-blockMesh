@@ -60,6 +60,18 @@ l_z		= points[::-1, 1]
 r_core	= r_ext * 0.5
 
 ###############################################################################
+# Curve for inner square of o-grid
+side_length = 1 / np.sqrt(2)
+
+tanp15 = np.tan(np.deg2rad(15))
+tanm15 = np.tan(np.deg2rad(-15))
+
+spline = CubicHermiteSpline([-side_length, side_length], [side_length, side_length], [tanp15, tanm15])
+
+o_grid_curve_x = np.linspace(-side_length, side_length, n_core + 1)
+o_grid_curve_y = spline(o_grid_curve_x)
+
+###############################################################################
 
 hex_0 = Hex((n_core, n_core, n_z))
 
@@ -75,18 +87,8 @@ hex_4 = Hex((n_core, n_shell, n_z))
 # Axis 1: y		- r_core / sqrt(2) -> r_core / sqrt(2)
 # Axis 2: z		0 -> l_z
 
-s = 1 / np.sqrt(2)
-
-tanp15 = np.tan(np.deg2rad(15))
-tanm15 = np.tan(np.deg2rad(-15))
-
-spline = CubicHermiteSpline([-s, s], [s, s], [tanp15, tanm15])
-
-x = np.linspace(-s, s, n_core + 1)
-y = spline(x)
-
-edge_0 = -y
-edge_1 = y
+edge_0 = - o_grid_curve_y
+edge_1 = o_grid_curve_y
 
 x = np.linspace(edge_0, edge_1, n_core + 1, axis=0)
 y = np.linspace(edge_0, edge_1, n_core + 1, axis=1)
@@ -224,10 +226,6 @@ o_grid_mesh.connectHex(2, 3, (0, 3, 7, 4), (2, 3, 7, 6))
 o_grid_mesh.connectHex(0, 4, (0, 1, 5, 4), (3, 2, 6, 7))
 o_grid_mesh.connectHex(3, 4, (0, 1, 5, 4), (0, 3, 7, 4))
 o_grid_mesh.connectHex(1, 4, (0, 1, 5, 4), (2, 1, 5, 6))
-
-# o_mesh.connectHex(1, 2, (0, 1, 5, 4), (3, 2, 6, 7))
-# o_mesh.connectHex(2, 3, (1, 2, 6, 5), (0, 3, 7, 4))
-# o_mesh.connectHex(0, 3, (0, 1, 5, 4), (3, 2, 6, 7))
 
 ###############################################################################
 

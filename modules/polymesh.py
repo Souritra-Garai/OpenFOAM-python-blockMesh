@@ -9,6 +9,7 @@ from .points import writePoints
 def writePolyMesh(case_dir_path: Path, faces:dict, points:np.ndarray) -> None:
 
 	polyMesh_dir_path = case_dir_path / 'constant' / 'polyMesh'
+	polyMesh_dir_path.mkdir(parents=True, exist_ok=True)
 
 	logging.info('Writing polyMesh files to {0}'.format(polyMesh_dir_path))
 
