@@ -116,82 +116,70 @@ z = np.tile(l_z, (n_core + 1, 1))
 
 surface_1 = np.stack((x, y, z), axis=-1)
 
-volume = interpolate_surface_to_surface(surface_0, surface_1, n_shell + 1)
+# Axis 0: x | r			r_core -> r_ext
+# Axis 1: y | theta		- pi / 4 -> pi / 4
+# Axis 2: z				0 -> l_z
+volume_1 = interpolate_surface_to_surface(surface_0, surface_1, n_shell + 1)
 
-hex_1.assignPointCoordinates(volume)
+hex_1.assignPointCoordinates(volume_1)
 
 ###############################################################################
 # Hex 2
 
-surface_0 = hex_0.getFacePointsCoordinates((3, 2, 6, 7))
+# Axis 0: x | r			r_core -> r_ext
+# Axis 1: y | theta		- pi / 4 -> pi / 4
+# Axis 2: z				0 -> l_z
+volume_2 = volume_1.copy()
 
-theta = np.linspace(3 * np.pi / 4, np.pi / 4, n_core + 1)
+# Reflect (..., 3) shape ndarray containing the coordinates of points
+# about x = y plane
+volume_2[..., 0] = volume_1[..., 1]
+volume_2[..., 1] = volume_1[..., 0]
 
-# Axis 0: theta	3 * pi / 4 -> pi / 4
-# Axis 1: z		0 -> l_z
-x = r_ext[np.newaxis, :] * np.cos(theta[:, np.newaxis])
-y = r_ext[np.newaxis, :] * np.sin(theta[:, np.newaxis])
-
-surface_1 = np.stack((x, y, z), axis=-1)
-
-# Axis 0: r		r_core -> r_ext
-# Axis 1: theta	3 * pi / 4 -> pi / 4
-# Axis 2: z		0 -> l_z
-volume = interpolate_surface_to_surface(surface_0, surface_1, n_shell + 1)
-
-# Axis 0: x | theta	3
+# Axis 0: x | theta	3 * np.pi/4 -> np.pi/4
 # Axis 1: y | r		0 -> r_ext
 # Axis 2: z			0 -> l_z
-volume = np.moveaxis(volume, [0, 1, 2], [1, 0, 2])
+volume_2 = np.moveaxis(volume_2, [0, 1, 2], [1, 0, 2])
 
-hex_2.assignPointCoordinates(volume)
+hex_2.assignPointCoordinates(volume_2)
 
 ###############################################################################
 # Hex 3
 
-surface_1 = hex_0.getFacePointsCoordinates((0, 3, 7, 4))
+# Axis 0: x | r			r_core -> r_ext
+# Axis 1: y | theta		- pi / 4 -> pi / 4
+# Axis 2: z				0 -> l_z
+volume_3 = volume_1.copy()
 
-theta = np.linspace(-3 * np.pi / 4, - 5 * np.pi / 4, n_core + 1)
-
-# Axis 0: theta	- 3 * pi / 4 -> - 5 * pi / 4
-# Axis 1: z		0 -> l_z
-x = r_ext[np.newaxis, :] * np.cos(theta[:, np.newaxis])
-y = r_ext[np.newaxis, :] * np.sin(theta[:, np.newaxis])
-
-surface_0 = np.stack((x, y, z), axis=-1)
+# Reflect (..., 3) shape ndarray containing the coordinates of points
+# about x = 0 plane
+volume_3[..., 0] = -volume_1[..., 0]
 
 # Axis 0: x | r		r_ext -> r_core
 # Axis 1: y | theta - 3 * pi / 4 -> - 5 * pi / 4
 # Axis 2: z			0 -> l_z
-volume = interpolate_surface_to_surface(surface_0, surface_1, n_shell + 1)
+volume_3 = volume_3[::-1, ...]
 
-hex_3.assignPointCoordinates(volume)
+hex_3.assignPointCoordinates(volume_3)
 
 ###############################################################################
 # Hex 4
 
-surface_1 = hex_0.getFacePointsCoordinates((0, 1, 5, 4))
+# Axis 0: x | theta	3 * np.pi/4 -> np.pi/4
+# Axis 1: y | r		0 -> r_ext
+# Axis 2: z			0 -> l_z
+volume_4 = volume_2.copy()
 
-theta = np.linspace(-3 * np.pi / 4, - np.pi / 4, n_core + 1)
-
-# Axis 0: theta	- 3 * pi / 4 -> - pi / 4
-# Axis 1: z		0 -> l_z
-x = r_ext[np.newaxis, :] * np.cos(theta[:, np.newaxis])
-y = r_ext[np.newaxis, :] * np.sin(theta[:, np.newaxis])
-
-surface_0 = np.stack((x, y, z), axis=-1)
-
-# Axis 0: r_ext -> r_core
-# Axis 1: theta - 3 * pi / 4 -> - pi / 4
-# Axis 2: z		0 -> l_z
-volume = interpolate_surface_to_surface(surface_0, surface_1, n_shell + 1)
+# Reflect (..., 3) shape ndarray containing the coordinates of points
+# about y = 0 plane
+volume_4[..., 1] = -volume_2[..., 1]
 
 # Axis 0: x | theta	- 3 * pi / 4 -> - pi / 4
 # Axis 1: y | r		r_ext -> r_core
 # Axis 2: z			0 -> l_z
-volume = np.moveaxis(volume, [0, 1, 2], [1, 0, 2])
+volume_4 = volume_4[:, ::-1, :]
 
-hex_4.assignPointCoordinates(volume)
+hex_4.assignPointCoordinates(volume_4)
 
 ###############################################################################
 
