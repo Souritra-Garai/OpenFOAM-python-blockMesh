@@ -37,11 +37,11 @@ class ConnectedHexCollection :
 
 		pass
 
-	def addHex(self, hex:Hex) -> None:
+	def addHex(self, hex:Hex) -> int:
 		
 		self.collection_hex.append(hex)
 
-		pass
+		return len(self.collection_hex) - 1
 
 	def checkConnected(self, hex_1:int, vertices_hex_1:list[int, int, int, int]) -> bool:
 		
