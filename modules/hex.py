@@ -39,6 +39,8 @@ hex_vertices_connectivity = {
 
 def getAxisAndOrientation(vertex_1:int, vertex_2:int) -> tuple[int, int] :
 	'''
+	Returns the axis along which the vertices are connected and
+	the orientation of the connection
 	Orientation is +1 if vertex_2 is in the positive direction of vertex_1
 	along the corresponding axis, -1 otherwise
 	'''
@@ -235,7 +237,7 @@ def getFaceVertex4(points:np.ndarray, axis_1:int, axis_2:int, axis_face_normal:i
 
 	return points[tuple(slices_3d)]
 
-
+# Class to represent a hexahedral block
 class Hex :
 	
 	def __init__(self, cell_shape:tuple[int, int, int]) -> None :
