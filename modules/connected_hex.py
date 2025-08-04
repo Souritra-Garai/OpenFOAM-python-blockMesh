@@ -49,7 +49,7 @@ class ConnectedHexCollection :
 
 		return len(self.collection_hex) - 1
 
-	def isHexFaceConnected(self, hex:int, vertices_hex:list[int, int, int, int]) -> bool:
+	def isHexFaceConnected(self, hex:int, vertices_hex:list[int]) -> bool:
 		'''
 		Check if the hexahedral block already shares the face defined by the vertices
 		with another hexahedral block
@@ -77,8 +77,8 @@ class ConnectedHexCollection :
 		self,
 		hex_1:int,
 		hex_2:int,
-		vertices_hex_1:list[int, int, int, int],
-		vertices_hex_2:list[int, int, int, int]
+		vertices_hex_1:list[int],
+		vertices_hex_2:list[int]
 	) -> None :
 		'''
 		Connect two hexahedral blocks such that they share a face
